@@ -1,14 +1,15 @@
 const express = require("express");
-var MongoClient = require('mongodb').MongoClient
+// var MongoClient = require('mongodb').MongoClient
 //Create a database named "mydb":
 var url = "mongodb://localhost:27017/mydatabase1";
 
 
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  console.log("Database created!");
-  db.close();
-});
+// MongoClient.connect(url, function(err, db) {
+//   if (err) throw err;
+//   console.log("Database created!");
+//   console.log("hi")
+//   db.close();
+// });
 
 const app = express();
 const path = require("path");
@@ -40,20 +41,20 @@ app.get("/" , (req,res) => {
 
 app.post("/status/submit" , (req,res) => {
     var payload= req.body;
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db("mydatabase1");
+    // MongoClient.connect(url, function(err, db) {
+    //     if (err) throw err;
+    //     var dbo = db.db("mydatabase1");
         
-        dbo.collection("status").insertOne(payload, function(err, res) {
-          if (err) throw err;
-          console.log("1 document inserted");
-          db.close();
-        });
-      });
+    //     dbo.collection("status").insertOne(payload, function(err, res) {
+    //       if (err) throw err;
+    //       console.log("1 document inserted");
+    //       db.close();
+    //     });
+    //   });
    
     res.json({})
 });
-app.post("api/status" , (req,res) => {
+app.get("/status" , (req,res) => {
     res.json({name:'deeksha' , location:'moradabad'})
 });
 app.get("/register" , (req,res) => {
