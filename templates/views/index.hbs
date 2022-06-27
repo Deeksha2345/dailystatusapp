@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Registration Form</title>
+</head>
+<body>
+    {{>navbar}}
+    
+      <div class="main">
+        <div class="registrationForm">
+            <form action="/register" method="POST">
+                <div class="formgroup"> 
+                    
+                    <input type="text" class="form-control" placeholder="first Name" value=""
+                    name="firstname"/>
+                </div><br>
+                <div class="formgroup">
+
+                    <input type="text" class="form-control" placeholder="last Name" value=""
+                    name="lastname"/>
+                </div><br>
+                <div class="formgroup">
+                  <input type="email" class="form-control" placeholder="email" value=""
+                    name="email"/>
+                </div><br>
+                <div class="formgroup">
+                  <input type="text" minlength="10" maxlength="10"class="form-control" placeholder="phone" value=""
+                    name="phone"/>
+                </div><br>
+               
+                <div class="formgroup">
+                   
+                    <input type="text" class="form-control" placeholder=" enter your age" value=""
+                    name="age"/>
+                </div><br>
+                <div class="formgroup">
+                   
+                    <input type="password" class="form-control" placeholder="password" value=""
+                    name="password"/>
+                </div><br>
+                <div class="formgroup">
+                   
+                    <input type="password" class="form-control" placeholder=" confirm password" value=""
+                    name="confirmpassword"/>
+                </div><br>
+
+
+                <div class="formgroup">
+                   
+                    <div>
+                        <input type="radio" name="gender" value="female"  checked>
+                        <span >female</span>
+                        <input type="radio" name="gender" value="male"  checked>
+                        <span >male</span>
+
+                        <br><br>
+                    </div>
+                </div>
+                
+                </div>
+                <div class="formgroup">
+
+                    <div>
+                        <input type="submit" class="btnRegister" value="Register"/>
+                    </div>
+            </form>
+        </div>
+
+    </div>
+</body>
+
+
+</html>

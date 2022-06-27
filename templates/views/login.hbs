@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>Login Form</title>
+</head>
+
+<body>
+    {{>navbar}}
+
+    <div class="main1">
+        <div class="loginform">
+            
+            <form  class="form-signin" action="/login" method="POST">
+                <div class="formgroup1">
+                    <input type="email" class="form-control" placeholder="Email"  name="email" >
+                </div>
+
+                <div class="formgroup1">
+
+                    <input type="password" class="form-control" placeholder="Password"  name="password" >
+                </div>
+
+        </div><br>
+        <div class="formgroup1">
+                    <div>
+               <button class="btn btn-lg btn-primary btn-block" type="submit">sign in </button>
+            </div>
+            </form>
+        </div>
+
+    </div>
+</body>
+
+
+</html>
