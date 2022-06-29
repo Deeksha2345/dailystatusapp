@@ -1,15 +1,16 @@
 const express = require("express");
-// var MongoClient = require('mongodb').MongoClient
+var MongoClient = require('mongodb').MongoClient
 //Create a database named "mydb":
-// var url = "mongodb://localhost:27017/mydatabase1";
+var url = "mongodb://localhost:27017/mydatabase1";
+var data = "mongodb://localhost:27017/mydatabase2";
 
 
-// MongoClient.connect(url, function(err, db) {
-//   if (err) throw err;
-//   console.log("Database created!");
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  console.log("Database created!");
   
-//   db.close();
-// });
+  db.close();
+});
 
 const app = express();
 const path = require("path");
@@ -34,95 +35,115 @@ app.set("view engine", "hbs");
 app.set("views", template_path);
 hbs.registerPartials(partials_path);
 
-// app.get("/" , (req,res) => {
-//     res.render("index")
-// });
-
-
-// app.post("/status/submit" , (req,res) => {
-//     var payload= req.body;
-//     MongoClient.connect(url, function(err, db) {
-//         if (err) throw err;
-//         var dbo = db.db("mydatabase1");
-        
-//         dbo.collection("status").insertOne(payload, function(err, res) {
-//           if (err) throw err;
-//           console.log("1 document inserted");
-//           db.close();
-//         });
-//       });
-    
-//     res.json({nname:'deeksha' , location:'moradabad'})
-// });
-app.get("/status" , (req,res) => {
-    res.json({name:'deeksha' , location:'moradabad'})
+app.get("/" , (req,res) => {
+    res.render("index")
 });
-// app.get("/register" , (req,res) => {
-//     res.json({name:'deeksha' , location:'moradabad'})
-// });
 
-// app.get("/login" , (req,res) => {
-//     res.render("login")
-// });
 
-// app.post("/register" , async(req,res) => {
-//     try{
+app.post("/status/submit" , (req,res) => {
+    var payload= req.body;
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("mydatabase1");
+        
+        dbo.collection("status").insertOne(payload, function(err, res) {
+          if (err) throw err;
+          console.log("1 document inserted");
+          db.close();
+        });
+      });
+    res.send("hi")
+    res.json({ name:'deeksha arya 11' , location:'moradabad'})
+});
+
+
+
+app.get("/status" , (req,res) => {
+    res.json({name:'deeksha' , location:'moradabad1'})
+});
+
+
+
+app.get("/register" , (req,res) => {
+
+    var payload1=req.body;
+
+
+    MongoClient.connect(data, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("mydatabase2");
+        
+        dbo.collection("register").insertOne(payload1, function(err, res) {
+          if (err) throw err;
+          console.log("2 document inserted");
+          db.close();
+        });
+      });
+    res.json({name:'deeksha' , location:'moradabad33'})
+});
+
+app.get("/login" , (req,res) => {
+    res.json("login")
+});
+
+app.post("/register" , async(req,res) => {
+    try{
        
         // const password=req.body.password;
         // const cpassword=req.body.confirmpassword;
-//         const {firstname, lastname,email,gender,phone,age,password,confirmpassword}=req.body
-//         console.log(firstname, lastname,email,gender,phone,age,password,confirmpassword);
+        const {firstname, lastname,email,gender,phone,age,password,confirmpassword}=req.body
+        console.log(firstname, lastname,email,gender,phone,age,password,confirmpassword);
 
-//         if(password===confirmpassword){
+        if(password===confirmpassword){
 
-//             const registerEmployee= await new Register({
-//                 firstname:req.body.firstname,
-//                 lastname:req.body.lastname,
-//                 email:req.body.email,
-//                 gender:req.body.gender,
-//                 phone:req.body.phone,
-//                 age:req.body.age,
-//                 password:req.body.password,
-//                confirmpassword:req.body.confirmpassword
-//             })
+            const registerEmployee= await new Register({
+                firstname:req.body.firstname,
+                lastname:req.body.lastname,
+                email:req.body.email,
+                gender:req.body.gender,
+                phone:req.body.phone,
+                age:req.body.age,
+                password:req.body.password,
+               confirmpassword:req.body.confirmpassword
+            })
 
 
-//           const registered = await registerEmployee.save();
-//           res.status(201).send(registered);
-//           console.log(registered);
+          const registered = await registerEmployee.save();
+          res.status(201).send(registered);
+          console.log(registered);
 
-//         }else{
-//           res.send("passworld are not matching")
-//         }
+        }else{
+          res.send("passworld are not matching")
+        }
 
-//     }catch(error){
-//         res.status(400).send(error);
-//         console.log(error,"this is error");
+    }catch(error){
+        res.status(400).send(error);
+        console.log(error,"this is error");
 
-//     }
-// })
+    }
+})
 
-// app.post("/login" , async(req,res) => {
+app.post("/login" , async(req,res) => {
 
-//     try{
-//         const email =req.body.email;
-//         const password =req.body.password;
+    try{
+        const email =req.body.email;
+        const password =req.body.password;
 
-//         const useremail = await Register.findOne({email:email});
+        const useremail = await Register.findOne({email:email});
 
-//         if(useremail.password === password){
+        if(useremail.password === password){
 
-//             res.status(201).render("index");
+            res.status(201).render("index");
 
-//           }else{
-//               res.send("invalid login Details");
-//           }
+          }else{
+              res.send("invalid login Details");
+          }
 
-//     }catch(error){
-//         res.status(400).send("invalid login Details")
+    }catch(error){
+        res.status(400).send("invalid login Details")
 
-//     }
-// })
+    }
+})
 
 
 
