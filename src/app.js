@@ -1,139 +1,85 @@
 const express = require("express");
-var MongoClient = require('mongodb').MongoClient
-//Create a database named "mydb":
-var url = "mongodb://localhost:27017/mydatabase1";
-var data = "mongodb://localhost:27017/mydatabase2";
-
-
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  console.log("Database created!");
-  
-  db.close();
-});
 
 const app = express();
 const path = require("path");
-const hbs = require("hbs");
+
 const bcrypt = require("bcryptjs");
-
-
 require("./db/conn");
-const Register = require("./models/registers");
+const Register = require("./models/register");
+
 const { json } = require("express");
 const port = process.env.PORT || 3000;
-const static_path= path.join(__dirname , "../public");
-const template_path= path.join(__dirname , "../templates/views");
-const partials_path= path.join(__dirname , "../templates/partials");
+
+
 
 
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
-app.use(express.static(static_path))
-app.set("view engine", "hbs");
-app.set("views", template_path);
-hbs.registerPartials(partials_path);
+
 
 app.get("/" , (req,res) => {
     res.render("index")
 });
 
 
-app.post("/status/submit" , (req,res) => {
-    var payload= req.body;
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db("mydatabase1");
-        
-        dbo.collection("status").insertOne(payload, function(err, res) {
-          if (err) throw err;
-          console.log("1 document inserted");
-          db.close();
-        });
-      });
-    res.send("hi")
-    res.json({ name:'deeksha arya 11' , location:'moradabad'})
-});
 
-
-
-app.get("/status" , (req,res) => {
-    res.json({name:'deeksha' , location:'moradabad1'})
-});
-
-
-
-app.get("/register" , (req,res) => {
-
-    var payload1=req.body;
-
-
-    MongoClient.connect(data, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db("mydatabase2");
-        
-        dbo.collection("register").insertOne(payload1, function(err, res) {
-          if (err) throw err;
-          console.log("2 document inserted");
-          db.close();
-        });
-      });
-    res.json({name:'deeksha' , location:'moradabad33'})
-});
-
-app.get("/login" , (req,res) => {
-    res.json("login")
-});
 
 app.post("/register" , async(req,res) => {
-    try{
-       
-        // const password=req.body.password;
-        // const cpassword=req.body.confirmpassword;
-        const {firstname, lastname,email,gender,phone,age,password,confirmpassword}=req.body
-        console.log(firstname, lastname,email,gender,phone,age,password,confirmpassword);
-
-        if(password===confirmpassword){
-
-            const registerEmployee= await new Register({
-                firstname:req.body.firstname,
-                lastname:req.body.lastname,
-                email:req.body.email,
-                gender:req.body.gender,
-                phone:req.body.phone,
-                age:req.body.age,
-                password:req.body.password,
-               confirmpassword:req.body.confirmpassword
-            })
 
 
-          const registered = await registerEmployee.save();
-          res.status(201).send(registered);
-          console.log(registered);
 
-        }else{
-          res.send("passworld are not matching")
-        }
+  try{
+     const {name,email,password,phone}=req.body
+      console.log(name,email,password,phone);
 
-    }catch(error){
-        res.status(400).send(error);
-        console.log(error,"this is error");
+      if(password){
+        
 
-    }
-})
+          const registerEmployee= await new Register({
 
-app.post("/login" , async(req,res) => {
+              name:req.body.name,
+              email:req.body.email,
+              password:req.body.password,
+              phone:req.body.phone,
+             })
+        const registered = await registerEmployee.save();
+        
+        res.status(201).send(registered);
+        console.log(registered,"this is data");
 
-    try{
-        const email =req.body.email;
-        const password =req.body.password;
+      }else{
+        
+        res.send("passworld are not matching")
+      }
 
-        const useremail = await Register.findOne({email:email});
+  }catch(error){
+      res.status(400).send(error);
+     
 
-        if(useremail.password === password){
+  }
+  
+  
+  });
 
-            res.status(201).render("index");
+  app.post("/login" , async(req,res) => {
+
+     try{
+      
+        const uemail =req.body.email;
+        const upassword =req.body.password;
+ 
+        const user = await Register.findOne({email:uemail});
+      
+
+        const passwordmatch = await bcrypt.compare(upassword,user.password);
+        console.log(passwordmatch);
+     
+      
+
+        if(passwordmatch){
+
+            res.status(201).send(user);
 
           }else{
               res.send("invalid login Details");
@@ -141,15 +87,12 @@ app.post("/login" , async(req,res) => {
 
     }catch(error){
         res.status(400).send("invalid login Details")
+        console.log(error);
 
     }
 })
-
-
-
-
-
-
-app.listen(port, () => {
+    
+    app.listen(port, () => {
     console.log(`server is running at port no ${port}`);
 })
+module.exports = app;
