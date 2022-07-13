@@ -3,10 +3,15 @@ const bcrypt=require("bcryptjs");
 
 const employeeSchema = new mongoose.Schema({
   
-    name :{
+  firstname :{
         type:'string',
         required:true
     }, 
+    lastname:{
+      type:'string',
+      required:true
+
+    },
     
     email:{
         type:'string',
@@ -18,10 +23,11 @@ const employeeSchema = new mongoose.Schema({
         isrequired: true
     },
    
-      phone:{
+    mobilenumber:{
         type:Number,
         isrequired: true
-      }
+      },
+      
         })
 
 employeeSchema.pre("save", async function(next) {
