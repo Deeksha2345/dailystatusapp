@@ -28,6 +28,7 @@ const employeeSchema = new mongoose.Schema({
         isrequired: true
       },
       
+      
         })
 
 employeeSchema.pre("save", async function(next) {
