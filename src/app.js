@@ -4,7 +4,7 @@ const path = require("path");
 const bcrypt = require("bcryptjs");
 require("./db/conn");
 const Register = require("./models/register");
-const statusSchema = require("./models/status");
+const Status = require("./models/status");
 
 const { json } = require("express");
 const port = process.env.PORT || 3000;
@@ -31,6 +31,7 @@ app.post("/adduser", async (req, res) => {
         email: req.body.email,
         password: req.body.password,
         mobilenumber: req.body.mobilenumber,
+        userType: "Intern"
       })
 
       const registered = await registerEmployee.save();
@@ -47,7 +48,7 @@ app.post("/adduser", async (req, res) => {
 });
 
 
-app.get("/adduser", async (req, res) => {
+app.get("/users", async (req, res) => {
   Register.find({})
     .select('firstname lastname email mobilenumber')
     .then(result => {
@@ -82,20 +83,28 @@ app.get("/adduser", async (req, res) => {
 app.post("/addstatus", async (req, res) => {
 
   try {
-    const userstatus = new statusSchema({
+    const userstatus = new Status({
       title: req.body.title,
       description: req.body.description
     })
     const status = await userstatus.save()
-    res.send(status);
+    res.json({ Status: status });
   }
   catch (e) {
     res.send(e)
   }
 });
 
-app.get("/addstatus", (req, res) => {
-  res.send("addstatus");
+app.get("/addstatus", async (req, res) => {
+
+  Status.find({})
+    .then(result => {
+      res.status(200).json({ userDetail: result })
+    })
+    .catch(err => {
+      console.log(error);
+      res.status(500).json({ err: error });
+    })
 })
 
 
