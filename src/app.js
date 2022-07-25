@@ -4,7 +4,7 @@ const path = require("path");
 const bcrypt = require("bcryptjs");
 require("./db/conn");
 const Register = require("./models/register");
-const Status = require("./models/status");
+// const Status = require("./models/status");
 
 const { json } = require("express");
 const port = process.env.PORT || 3000;
@@ -83,21 +83,32 @@ app.get("/users", async (req, res) => {
 app.post("/addstatus", async (req, res) => {
 
   try {
-    const userstatus = new Status({
+    const userEmail = req.body.email;
+    const userstatus = {
       title: req.body.title,
       description: req.body.description
-    })
-    const status = await userstatus.save()
-    res.json({ Status: status });
+    }
+    const user = await Register.findOne({email:userEmail});
+    user.statuses.push(userstatus);  
+    user.save();
+    res.json({user:user});
+      // (err,foundUser)=>{}
+      // foundUser.statuses.push(userstatus);
+      // foundUser.save();
+      
+      // res.json({ user: foundUser, status: userstatus });
+    
+    // const status = await userstatus.save()
   }
   catch (e) {
-    res.send(e)
+    res.status(400).json({error:e});
   }
 });
 
-app.get("/addstatus", async (req, res) => {
+app.get("/statuses", async (req, res) => {
 
-  Status.find({})
+  Register.find({})
+    .select('email statuses')
     .then(result => {
       res.status(200).json({ userDetail: result })
     })

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const Status = require("./models/status");
+const statusSchema = require("./status");
 
 const employeeSchema = new mongoose.Schema({
 
@@ -29,8 +29,8 @@ const employeeSchema = new mongoose.Schema({
     type: 'string',
     isrequired: true
   },
-  status:{
-    type: [Status]
+  statuses:{
+    type: [statusSchema]
   }
 })
 

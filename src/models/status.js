@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 
-const statusSchema = new mongoose.Schema({
+const statusSchema = ({
 
   title: {
     type: 'string',
@@ -10,9 +9,8 @@ const statusSchema = new mongoose.Schema({
   description: {
     type: 'string',
     required: true
-
   }
 })
 
-const Status = new mongoose.model("Status", statusSchema);
-module.exports = Status;  
+//const Status = new mongoose.model("Status", statusSchema);
+module.exports = statusSchema;  
