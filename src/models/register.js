@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const Status = require("./models/status");
+const Status = require("./status").schema;
 
 const employeeSchema = new mongoose.Schema({
 
