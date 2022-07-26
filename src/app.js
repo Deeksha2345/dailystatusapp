@@ -88,7 +88,8 @@ app.post("/addstatus", async (req, res) => {
   try {
     const userstatus = new Status({
       title: req.body.title,
-      description: req.body.description
+      description: req.body.description,
+      timestamp:req.body.timestamp
     })
     const status = await userstatus.save()
     res.json({ Status: status });

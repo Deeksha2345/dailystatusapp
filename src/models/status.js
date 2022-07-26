@@ -11,6 +11,10 @@ const statusSchema = new mongoose.Schema({
     type: 'string',
     required: true
 
+  },
+  timestamp:{
+    type:'date',
+    required:true
   }
 })
 
