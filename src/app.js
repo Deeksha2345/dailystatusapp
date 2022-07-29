@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const bcrypt = require("bcryptjs");
+const cors = require("cors");
 require("./db/conn");
 const Register = require("./models/register");
 // const Status = require("./models/status");
@@ -11,7 +12,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.render("index")
@@ -125,16 +126,16 @@ app.post("/login", async (req, res) => {
     const upassword = req.body.password;
     const user = await Register.findOne({ email: uemail });
     const passwordmatch = await bcrypt.compare(upassword, user.password);
-    console.log(passwordmatch);
+    console.log("Password match status "+passwordmatch);
 
     if (passwordmatch) {
-      res.status(201).send(user);
+      res.status(201).json({status:"success", user:user});
     }
     else {
-      res.send("invalid login Details");
+      res.json("invalid login Details");
     }
   } catch (error) {
-    res.status(400).send("invalid login Details")
+    res.status(400).json("Try and Catch error");  
   }
 })
 
