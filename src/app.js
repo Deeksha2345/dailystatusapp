@@ -4,7 +4,7 @@ const path = require("path");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
 require("./db/conn");
-const Register = require("./models/register");
+const User = require("./models/register");
 // const Status = require("./models/status");
 
 const { json } = require("express");
@@ -26,7 +26,7 @@ app.post("/adduser", async (req, res) => {
 
     if (password) {
 
-      const registerEmployee = await new Register({
+      const registerEmployee = await new User({
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         email: req.body.email,
@@ -50,7 +50,7 @@ app.post("/adduser", async (req, res) => {
 
 
 app.get("/users", async (req, res) => {
-  Register.find({})
+  User.find({})
     .select('firstname lastname email mobilenumber')
     .then(result => {
       // console.log("No erroe yet");
@@ -87,15 +87,17 @@ app.post("/addstatus", async (req, res) => {
     const userEmail = req.body.email;
     const userstatus = {
       title: req.body.title,
-      description: req.body.description
+      description: req.body.description,
+      timestamp: req.body.timestamp
     }
-    const user = await Register.findOne({email:userEmail});
+
+    const user = await User.findOne({email:userEmail});
     user.statuses.push(userstatus);  
     user.save();
     res.json({user:user});
       // (err,foundUser)=>{}
       // foundUser.statuses.push(userstatus);
-      // foundUser.save();
+      // foundUser.save`();
       
       // res.json({ user: foundUser, status: userstatus });
     
@@ -106,9 +108,25 @@ app.post("/addstatus", async (req, res) => {
   }
 });
 
+// app.post("/addstatus", async (req, res) => {
+
+//   try {
+//     const userstatus = new Status({
+//       title: req.body.title,
+//       description: req.body.description,
+//       timestamp: req.body.timestamp
+//     })
+//     const status = await userstatus.save()
+//     res.json({ Status: status });
+//   }
+//   catch (e) {
+//     res.send(e)
+//   }
+// });
+
 app.get("/statuses", async (req, res) => {
 
-  Register.find({})
+  User.find({})
     .select('email statuses')
     .then(result => {
       res.status(200).json({ userDetail: result })
@@ -119,12 +137,19 @@ app.get("/statuses", async (req, res) => {
     })
 })
 
+app.post("/statuses", async function (req,res){
+  const email = req.body.email;
+  const user = await User.findOne({ email: email });
+  res.status(200).json({user:user});
+
+});
+
 
 app.post("/login", async (req, res) => {
   try {
     const uemail = req.body.email;
     const upassword = req.body.password;
-    const user = await Register.findOne({ email: uemail });
+    const user = await User.findOne({ email: uemail });
     const passwordmatch = await bcrypt.compare(upassword, user.password);
     console.log("Password match status "+passwordmatch);
 

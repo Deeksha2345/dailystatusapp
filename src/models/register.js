@@ -44,5 +44,5 @@ employeeSchema.pre("save", async function (next) {
   next();
 })
 
-const Register = new mongoose.model("Register", employeeSchema);
-module.exports = Register;  
+const User = new mongoose.model("User", employeeSchema);
+module.exports = User;  

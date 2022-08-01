@@ -9,8 +9,12 @@ const statusSchema = ({
   description: {
     type: 'string',
     required: true
+  },
+  timestamp: {
+    type: 'date',
+    required: true
   }
 })
 
-//const Status = new mongoose.model("Status", statusSchema);
+// const Status = new mongoose.model("Status", statusSchema);
 module.exports = statusSchema;  
