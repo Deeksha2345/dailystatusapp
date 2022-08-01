@@ -8,7 +8,7 @@ const User = require("./models/register");
 // const Status = require("./models/status");
 
 const { json } = require("express");
-const port = process.env.PORT || 3000;
+let port = process.env.PORT;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -164,7 +164,9 @@ app.post("/login", async (req, res) => {
   }
 })
 
-
+if(port === null || port===""){
+  port =3000;
+}
 app.listen(port, () => {
   console.log(`server is running at port no ${port}`);
 })
