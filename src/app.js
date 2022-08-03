@@ -164,9 +164,65 @@ app.post("/login", async (req, res) => {
   }
 })
 
+app.patch("/editStatus", async function(req,res){
+  try{
+    const oldTitle = req.body.oldTitle;
+    const oldDescription = req.body.oldDescription;
+    const newTitle = req.body.newTitle;
+    const newDescription = req.body.newDescription;
+    const uemail = req.body.email;
+
+    var timeStamp;
+    const user = await User.findOne({email:uemail});
+    const statuses = user.statuses;
+    for(var i=0; i<statuses.length; i++){
+      if (statuses[i].title === oldTitle && statuses[i].description===oldDescription){
+        statuses[i].title = newTitle; statuses[i].description = newDescription;
+      }
+    }
+    user.save();
+    // const newStatus = {
+    //   title : newTitle,
+    //   description: newDescription,
+    //   timestamp: timeStamp,
+    //   description : newDescription
+    // }
+    // statuses.push(newStatus);
+    res.json("Success");
+  }catch(e){
+    console.log(e);
+    res.status(400).json("Try and Catch error");
+  }
+});
+
+app.delete("/deleteStatus", async function(req,res){
+  try{
+    const title = req.body.title;
+    const description = req.body.description;
+    const uemail = req.body.email;
+    const user = await User.findOne({ email: uemail });
+    const statuses = user.statuses;
+    var filtered = statuses.filter(function(status){
+      if(status.title===title && status.description===description){
+        return false;
+      }
+      return true;
+    })
+    console.log(filtered);
+    user.statuses=filtered;
+    user.save();
+    res.json("success");
+  } catch (e) {
+    console.log(e);
+    res.status(400).json("Try and Catch error");
+  }
+})
+
+
 if(port === null || port===""){
   port =3000;
 }
+port = 3000;
 app.listen(port, () => {
   console.log(`server is running at port no ${port}`);
 })
