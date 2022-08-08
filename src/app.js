@@ -8,7 +8,7 @@ const User = require("./models/register");
 // const Status = require("./models/status");
 
 const { json } = require("express");
-let port = process.env.PORT;
+let port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -164,15 +164,14 @@ app.post("/login", async (req, res) => {
   }
 })
 
-app.patch("/editStatus", async function(req,res){
+app.post("/editStatus", async function(req,res){
   try{
     const oldTitle = req.body.oldTitle;
     const oldDescription = req.body.oldDescription;
     const newTitle = req.body.newTitle;
     const newDescription = req.body.newDescription;
-    const uemail = req.body.email;
+    const uemail = req.body.uemail;
 
-    var timeStamp;
     const user = await User.findOne({email:uemail});
     const statuses = user.statuses;
     for(var i=0; i<statuses.length; i++){
@@ -181,6 +180,8 @@ app.patch("/editStatus", async function(req,res){
       }
     }
     user.save();
+    res.json({statuses:user.statuses});
+    
     // const newStatus = {
     //   title : newTitle,
     //   description: newDescription,
@@ -188,7 +189,7 @@ app.patch("/editStatus", async function(req,res){
     //   description : newDescription
     // }
     // statuses.push(newStatus);
-    res.json("Success");
+    // res.json("Success");
   }catch(e){
     console.log(e);
     res.status(400).json("Try and Catch error");
@@ -208,21 +209,17 @@ app.delete("/deleteStatus", async function(req,res){
       }
       return true;
     })
-    console.log(filtered);
+    // console.log(filtered);
     user.statuses=filtered;
+    // console.log(user);
     user.save();
-    res.json("success");
+    res.json({statuses:user.statuses});
   } catch (e) {
     console.log(e);
     res.status(400).json("Try and Catch error");
   }
 })
 
-
-if(port === null || port===""){
-  port =3000;
-}
-port = 3000;
 app.listen(port, () => {
   console.log(`server is running at port no ${port}`);
 })
